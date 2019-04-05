@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Lexical_analyser
 {
@@ -71,10 +72,10 @@ namespace Lexical_analyser
                                    57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
                                },
                                {
-                                   57,57,57,57,57,21,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
+                                   57,57,57,57,57,21,57,57,57,57,57,57,57,22,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
                                },
                                {
-                                   57,57,57,57,57,57,57,57,57,57,57,57,57,22,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
+                                   57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
                                },
                                {
                                    57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,23,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
@@ -83,7 +84,7 @@ namespace Lexical_analyser
                                    57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
                                },
                                {
-                                   57,57,57,29,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
+                                   57,57,57,57,29,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
                                },
                                {
                                    57,57,57,57,26,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,57,58,58,58,58,58,58,58,58,58,58,68,69,62,70,70,0
@@ -227,14 +228,7 @@ namespace Lexical_analyser
 
         static void Main(string[] args)
         {
-            var test = "6 > 5        123" ;
-            var x = Table[70, 5];
-            Parse(new string[] { 
-                test,
-                "var xaaaa = 13.3",
-                "fadasd asdjsadl 123.asd zxcczxcxz 23.111 floAT INt1 IF",
-                "59aaaaaaa x = 123456asd"
-            });
+            Parse(File.ReadAllLines("CODE.txt"));
             Console.WriteLine("Press Any Key To Exit");
             Console.ReadKey();
         }
@@ -246,7 +240,9 @@ namespace Lexical_analyser
             bool isSpaceDivider;
             for (int k = 0; k < Input.Length; k++)
             {
-                Console.WriteLine("\nParsing : \"" + Input[k] );
+                if(string.IsNullOrEmpty(Input[k]))
+                    continue;
+                Console.WriteLine("\nParsing : \"" + Input[k] + "\"" );
                 state = 0;
                 LastTokenIndex = 0;
                 isSpaceDivider = false;
@@ -286,13 +282,14 @@ namespace Lexical_analyser
                                     Console.WriteLine("Const Float Number at line:" + (k + 1).ToString() + ", char:" + (LastTokenIndex + 1).ToString() + " = " + Input[k].Substring(LastTokenIndex, i - LastTokenIndex) );
                                     LastTokenIndex = i;
                                 }
-                                else if (state == 57 || state == 58)
+                                else if (state <59 && state!=0
+)
                                 {
                                     // its a ID
                                     Console.WriteLine("identifier at line:" + (k + 1).ToString() + ", char:" + (LastTokenIndex + 1).ToString() + " = " + Input[k].Substring(LastTokenIndex, i - LastTokenIndex) );
                                     LastTokenIndex = i;
                                 }
-                                else
+                                else 
                                     LastTokenIndex = i;
                             }
                             if (isSpaceDivider)
